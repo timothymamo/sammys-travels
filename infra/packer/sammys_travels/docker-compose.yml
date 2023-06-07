@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+  nginx:
+    image: nginx:1.25.0
+    container_name: nginx
+    volumes:
+      - ./sammys-travels.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 80:80
+    restart: unless-stopped
+    networks:
+      api:
+
+  db_migrate:
+    image: timothymamo/migrations-sammys-travels:0.1.0
+    container_name: db_migrate
+    hostname: db_migrate
+    env_file:
+      - .env
+    restart: on-failure:4
+    command: ["-path", "/migrations/", "-database",  "postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?search_path=${POSTGRES_SCHEMA}", "up"]
+    networks:
+      api:
+
+  backend:
+    image: timothymamo/be-sammys-travels:0.3.1
+    container_name: backend
+    hostname: backend
+    env_file:
+      - .env-backend
+    environment:
+      - DB_SSL_MODE=require # One of "require", "verify-full", "verify-ca", and "disable"
+    depends_on:
+      - db_migrate
+    ports:
+      - 8000:8000
+    restart: unless-stopped
+    networks:
+      api:
+
+  frontend:
+    image: timothymamo/fe-sammys-travels:0.4.0
+    container_name: frontend
+    hostname: frontend
+    env_file:
+      - .env-frontend
+    depends_on:
+      - backend
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    networks:
+      api:
+
+networks:
+  api:

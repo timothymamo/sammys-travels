@@ -1,0 +1,15 @@
+INSERT INTO places_list (place, longitude, latitude, photo, visited)
+VALUES ('Berlin',52.52,13.405,'NULL',false),
+('Budapest',47.4979,19.0402,'NULL',false),
+('Cincinati',39.1031,-84.512,'NULL',false),
+('Denver',39.7392,-104.99,'NULL',false),
+('Helsinki',60.1699,24.9384,'NULL',false),
+('Tokyo',35.6895,139.692,'tokyo.jpg',true),
+('Lisbon',38.736946,-9.142685,'NULL',false),
+('Bermudas',32.307800,-64.750504,'bermudas.jpg',true),
+('Moscow',55.7558,37.6173,'NULL',false),
+('Nairobi',-1.9207,36.8219,'NULL',false),
+('Oslo',59.9139,10.7522,'NULL',false),
+('Rio',-22.068,-43.1729,'NULL',false),
+('New Delhi',28.63576,77.22445,'NULL',false),
+('Grindavik',63.840672,-22.429350,'grindavik.jpg',true);
