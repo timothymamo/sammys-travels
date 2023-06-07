@@ -6,7 +6,6 @@ module "network" {
   tag    = "cloudexpo"
 
   enable_ssh   = true
-  ssh_ip_range = ["77.251.75.155"]
 }
 
 output "module" {
