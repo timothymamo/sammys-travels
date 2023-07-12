@@ -1,17 +1,14 @@
-import React, { useState } from 'react';
 import Popup from 'reactjs-popup';
 import API from './API'
 import PlacesList from './PlacesList'
 
 
-function Visited(visited) {
-  const [place, setPlace] = useState({ place: "" });
+function Visited(visited, place, setPlace, photo, setPhoto, hidden, setHidden) {
   const handleChange = (event) => {
     const { name, value } = event.target;
     setPlace((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
-  const [photo, setPhoto] = useState();
   const handleFileChange = (event) => {
     setPhoto(event.target.files[0]);
   };
@@ -22,14 +19,14 @@ function Visited(visited) {
       "photo": photo.name,
     });
 
-    { API("post", data, "addvisited", "") }
+    API("post", data, "addvisited", "")
 
     const formData = new FormData();
     formData.append("file", photo);
 
     const headers = { "Content-Type": "multipart/form-data" };
 
-    { API("post", formData, "uploadphoto", headers) }
+    API("post", formData, "uploadphoto", headers)
   };
 
   return (
@@ -52,7 +49,7 @@ function Visited(visited) {
         }
       </Popup>
       </li>
-      {PlacesList(visited)}
+      {PlacesList(visited, hidden, setHidden)}
     </ul>
   )
 };

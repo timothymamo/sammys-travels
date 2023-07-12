@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 function API(method, data, endpoint, headers) {
-  if (headers == "") {
+  if (headers === "") {
     headers = { 'Content-Type': 'application/json' }
   }
 

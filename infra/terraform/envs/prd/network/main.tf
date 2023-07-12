@@ -1,9 +1,9 @@
 module "network" {
   source = "../../../modules/network"
 
-  region = "ams3"
+  region = "tor1"
   domain = "devreltim.io"
-  tag    = "cloudexpo"
+  tag    = "collision"
 
   enable_ssh   = true
 }

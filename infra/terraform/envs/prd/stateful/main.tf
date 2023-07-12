@@ -1,7 +1,8 @@
 module "stateful" {
   source = "../../../modules/stateful"
 
-  region = "ams3"
+  region        = "tor1"
+  region_bucket = "nyc3"
 }
 
 output "module" {

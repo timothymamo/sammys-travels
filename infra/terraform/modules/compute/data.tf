@@ -32,7 +32,7 @@ data "digitalocean_database_cluster" "sammys_travels" {
 data "digitalocean_spaces_buckets" "sammys_travels" {
   filter {
     key    = "region"
-    values = [var.region]
+    values = [var.region_bucket] != [""] ? [var.region_bucket] : [var.region]
   }
   filter {
     key      = "name"

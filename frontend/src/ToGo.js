@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
 import Popup from 'reactjs-popup';
 import API from './API'
 import PlacesList from './PlacesList'
 
-function ToGo(togo) {
-  const [place, setPlace] = useState({ place: "" });
+function ToGo(togo, place, setPlace, hidden, setHidden) {
   const handleChange = (event) => {
     const { name, value } = event.target;
     setPlace((prevFormData) => ({ ...prevFormData, [name]: value }));
@@ -15,7 +13,7 @@ function ToGo(togo) {
       "place": place,
     });
 
-    { API("post", data, "addtogo", "") }
+    API("post", data, "addtogo", "")
   };
 
   return (
@@ -37,7 +35,7 @@ function ToGo(togo) {
         }
       </Popup>
       </li>
-      {PlacesList(togo)}
+      {PlacesList(togo, hidden, setHidden)}
     </ul>
   );
 };

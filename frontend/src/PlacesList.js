@@ -1,9 +1,6 @@
-import React, { useState } from 'react';
 import API from './API'
 
-const PlacesList = (places) => {
-
-  const [hidden, setHidden] = useState([]);
+const PlacesList = (places, hidden, setHidden) => {
 
   const mouseOver = (_, index) => {
     setHidden(c => {

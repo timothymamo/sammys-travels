@@ -22,8 +22,14 @@
 #   sensitive   = true
 
 variable "region" {
-  description = "The region where the Droplet will be created."
+  description = "The region where the Database will be created."
   type        = string
+}
+
+variable "region_bucket" {
+  description = "The region where the Bucket will be created. Defaults to Database region if empty."
+  type        = string
+  default     = ""
 }
 
 variable "db_size" {

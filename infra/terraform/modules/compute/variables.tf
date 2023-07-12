@@ -16,6 +16,12 @@ variable "region" {
   type        = string
 }
 
+variable "region_bucket" {
+  description = "The region where the Bucket is located. Defaults to Droplet region if empty."
+  type        = string
+  default     = ""
+}
+
 variable "domain" {
   description = "Domain name where the Supabase instance is accessible. The final domain will be of the format `supabase.example.com`"
   type        = string

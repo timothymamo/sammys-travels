@@ -5,6 +5,8 @@ resource "random_id" "id" {
 locals {
   bucket_name = "sammys-travels-${random_id.id.hex}"
 
+  region = var.region_bucket != "" ? var.region_bucket : var.region
+
   default_tags = [
     "sammys-travels",
     "digitalocean",

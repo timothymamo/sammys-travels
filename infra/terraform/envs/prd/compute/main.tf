@@ -5,10 +5,11 @@ variable "google_api" {}
 module "compute" {
   source = "../../../modules/compute"
 
-  no_instances = 1
-  region       = "ams3"
-  domain       = "devreltim.io"
-  tags         = ["cloudexpo"]
+  no_instances  = 5
+  region        = "tor1"
+  region_bucket = "nyc3"
+  domain        = "devreltim.io"
+  tags          = ["collision"]
 
   spaces_key    = var.spaces_key
   spaces_secret = var.spaces_secret
