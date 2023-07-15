@@ -44,3 +44,9 @@ data "digitalocean_spaces_buckets" "sammys_travels" {
     direction = "desc"
   }
 }
+
+
+data "doppler_secrets" "sammys_travels" {
+  project = var.doppler_project
+  config  = var.doppler_config
+}

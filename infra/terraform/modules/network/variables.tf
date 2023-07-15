@@ -1,10 +1,10 @@
 # # You can also set DIGITALOCEAN_TOKEN env variable
 # # Set the variable value in *.tfvars file or use the -var="do_token=..." CLI option
-# variable "do_token" {
-#   description = "DO API token with read and write permissions."
-#   type        = string
-#   sensitive   = true
-# }
+variable "do_token" {
+  description = "DO API token with read and write permissions."
+  type        = string
+  sensitive   = true
+}
 
 variable "region" {
   description = "The region where the Droplet will be created."

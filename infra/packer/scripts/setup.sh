@@ -1,7 +1,13 @@
 #!/bin/bash
 
+# fix: debconf: unable to initialize frontend: Dialog
+echo set debconf to Noninteractive
+echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections
+
 # Update existing packages:
 sudo apt -y update
+# fix: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process
+while sudo lsof /var/lib/dpkg/lock-frontend ; do sleep 10; done;  
 # Install prerequisite packages which let apt use packages over HTTPS:
 sudo apt -y install apt-transport-https ca-certificates curl software-properties-common
 # Add the GPG key for the official Docker repository to the system:
@@ -10,6 +16,7 @@ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
 # Install Docker:
 sudo apt -y update
+while sudo lsof /var/lib/dpkg/lock-frontend ; do sleep 10; done;
 sudo apt -y install docker-ce
 
 # Install Docker Compose

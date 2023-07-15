@@ -1,19 +1,19 @@
-variable "spaces_key" {}
-variable "spaces_secret" {}
-variable "google_api" {}
+variable "do_token" {}
+variable "doppler_token" {}
 
 module "compute" {
   source = "../../../modules/compute"
 
-  no_instances  = 5
-  region        = "tor1"
-  region_bucket = "nyc3"
-  domain        = "devreltim.io"
-  tags          = ["collision"]
+  do_token      = var.do_token
+  doppler_token = var.doppler_token
 
-  spaces_key    = var.spaces_key
-  spaces_secret = var.spaces_secret
-  google_api    = var.google_api
+  no_instances  = 5
+  region        = "ams3"
+  domain        = "devreltim.io"
+  tags          = ["doppler"]
+
+  doppler_project = "backend"
+  doppler_config  = "prd"
 
   ssh_keys = [37714963]
 }

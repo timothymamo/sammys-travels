@@ -10,9 +10,17 @@ terraform {
       source  = "hashicorp/cloudinit"
       version = "2.2.0"
     }
+    doppler = {
+      source = "DopplerHQ/doppler"
+      version = "1.2.2"
+    }
   }
 }
 
-# provider "digitalocean" {
-#   token = var.do_token
-# }
+provider "digitalocean" {
+  token = var.do_token
+}
+
+provider "doppler" {
+  doppler_token = var.doppler_token
+}

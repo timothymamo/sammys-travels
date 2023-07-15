@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
 	_ "github.com/lib/pq"
@@ -14,7 +13,8 @@ func DbInitialize(host, user, password, dbname, schema string, port int) (*sql.D
 
 	var connectionString string
 
-	dbsslmode := os.Getenv("DB_SSL_MODE")
+	dbsslmode := GetEnv("DB_SSL_MODE", "require")
+
 	connectionString =
 		fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s search_path=%s sslmode=%s", host, port, user, password, dbname, schema, dbsslmode)
 

@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -72,18 +73,10 @@ func (app *App) deletePlace(w http.ResponseWriter, r *http.Request) {
 
 func deletePhoto(w http.ResponseWriter, filename string) {
 
-	key := os.Getenv("SPACES_KEY")
-	secret := os.Getenv("SPACES_SECRET")
-	url := os.Getenv("SPACES_ENDPOINT_URL")
-
-	s3Config := &aws.Config{
-		Credentials:      credentials.NewStaticCredentials(key, secret, ""),
-		Endpoint:         aws.String(url),
-		Region:           aws.String("us-east-1"),
-		S3ForcePathStyle: aws.Bool(false),
+	newSession, err := newSession()
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, err.Error())
 	}
-
-	newSession, err := session.NewSession(s3Config)
 	if err != nil {
 		respondWithError(w, http.StatusBadRequest, err.Error())
 	}
@@ -91,9 +84,9 @@ func deletePhoto(w http.ResponseWriter, filename string) {
 	fileName, err := deleteFileInS3(newSession, filename)
 	if err != nil {
 		respondWithError(w, http.StatusBadRequest, "Could not delete file")
+	} else {
+		respondWithJSON(w, http.StatusCreated, "Image deleted successfully: "+fileName)
 	}
-
-	respondWithJSON(w, http.StatusCreated, "Image deleted successfully: "+fileName)
 }
 
 func (app *App) addToGo(w http.ResponseWriter, r *http.Request) {
@@ -143,9 +136,6 @@ func (app *App) addVisited(w http.ResponseWriter, r *http.Request) {
 func uploadPhoto(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 
-	key := os.Getenv("SPACES_KEY")
-	secret := os.Getenv("SPACES_SECRET")
-	url := os.Getenv("SPACES_ENDPOINT_URL")
 	maxSize := int64(10485760) // allow only 10MB of file size
 
 	err := r.ParseMultipartForm(maxSize)
@@ -161,14 +151,7 @@ func uploadPhoto(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	s3Config := &aws.Config{
-		Credentials:      credentials.NewStaticCredentials(key, secret, ""),
-		Endpoint:         aws.String(url),
-		Region:           aws.String("us-east-1"),
-		S3ForcePathStyle: aws.Bool(false),
-	}
-
-	newSession, err := session.NewSession(s3Config)
+	newSession, err := newSession()
 	if err != nil {
 		respondWithError(w, http.StatusBadRequest, err.Error())
 	}
@@ -194,4 +177,37 @@ func coordinates(addr string) (float32, float32) {
 		fmt.Println("got <nil> location")
 		return 0.0, 0.0
 	}
+}
+
+func GetEnv(key, fallback string) string {
+	value, exists := os.LookupEnv(key)
+	if !exists {
+		value = fallback
+	}
+	return value
+}
+
+func newSession() (*session.Session, error) {
+
+	key := os.Getenv("SPACES_KEY")
+	secret := os.Getenv("SPACES_SECRET")
+	url := os.Getenv("SPACES_ENDPOINT_URL")
+
+	value := GetEnv("FORCE_PATH_STYLE", "false")
+
+	pathStyle, err := strconv.ParseBool(value)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	s3Config := &aws.Config{
+		Credentials:      credentials.NewStaticCredentials(key, secret, ""),
+		Endpoint:         aws.String(url),
+		Region:           aws.String("us-east-1"),
+		S3ForcePathStyle: aws.Bool(pathStyle),
+	}
+
+	newSession, err := session.NewSession(s3Config)
+
+	return newSession, err
 }

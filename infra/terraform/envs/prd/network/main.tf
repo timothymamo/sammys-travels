@@ -1,9 +1,13 @@
+variable "do_token" {}
+
 module "network" {
   source = "../../../modules/network"
 
-  region = "tor1"
+  do_token = var.do_token
+
+  region = "ams3"
   domain = "devreltim.io"
-  tag    = "collision"
+  tag    = "doppler"
 
   enable_ssh   = true
 }

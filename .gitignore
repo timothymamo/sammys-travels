@@ -10,8 +10,6 @@ terraform.tfvars
 .vscode/
 .envrc
 
-/local/.env*
-
 # dependencies
 frontend/node_modules
 frontend/.pnp

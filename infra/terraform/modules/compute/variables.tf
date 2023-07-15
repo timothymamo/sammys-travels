@@ -1,10 +1,18 @@
 # # You can also set DIGITALOCEAN_TOKEN env variable
 # # Set the variable value in *.tfvars file or use the -var="do_token=..." CLI option
-# variable "do_token" {
-#   description = "DO API token with read and write permissions."
-#   type        = string
-#   sensitive   = true
-# }
+variable "do_token" {
+  description = "DO API token with read and write permissions."
+  type        = string
+  sensitive   = true
+}
+
+# # You can also set TF_VAR_doppler_token env variable
+# # Set the variable value in *.tfvars file or use the -var="do_token=..." CLI option
+variable "doppler_token" {
+  description = "Doppler API token with read and write permissions."
+  type        = string
+  sensitive   = true
+}
 
 variable "no_instances" {
   description = "The number of droplets to be deployed."
@@ -57,17 +65,12 @@ variable "tags" {
   default     = []
 }
 
-variable "spaces_key" {
-  description = "DO Spaces Key."
+variable "doppler_project" {
+  description = "The name of the Doppler project."
   type        = string
 }
 
-variable "spaces_secret" {
-  description = "DO Spaces Secret."
-  type        = string
-}
-
-variable "google_api" {
-  description = "Google Geolocation API key."
+variable "doppler_config" {
+  description = "The name of the Doppler config."
   type        = string
 }

@@ -1,6 +1,8 @@
 version: "3.8"
 
 services:
+######################
+# Local infrastructure
   database:
     image: postgres:14.1
     container_name: database
@@ -14,6 +16,26 @@ services:
       api:
         aliases:
             - database
+  
+  localstack:
+    container_name: s3_bucket
+    image: localstack/localstack:2.1.0
+    ports:
+      - "4566:4566"            # LocalStack Gateway
+      - "4510-4559:4510-4559"  # external services port range
+    environment:
+      - SERVICES=s3
+      - DEBUG=1
+      - LS_LOG=trace
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - ./localstack/init/init_s3.sh:/etc/localstack/init/ready.d/init_s3.sh
+      - ./localstack/images:/tmp/images
+      - ./localstack/cors:/tmp/cors
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      api:
+######################
 
   nginx:
     image: nginx:1.25.0
@@ -42,12 +64,12 @@ services:
     container_name: backend
     hostname: backend
     env_file:
+      - .env
       - .env-backend
-    environment:
-      - DB_SSL_MODE=disable # One of "require", "verify-full", "verify-ca", and "disable"
-      - SPACES_KEY=${SPACES_ACCESS_KEY_ID}
-      - SPACES_SECRET=${SPACES_SECRET_ACCESS_KEY}
+    environment: # Only needed for local development
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - DB_SSL_MODE=disable # One of "require", "verify-full", "verify-ca", and "disable"
+      - FORCE_PATH_STYLE=true
     depends_on:
       - db_migrate
     ports:
