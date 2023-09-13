@@ -1,6 +1,6 @@
 resource "digitalocean_spaces_bucket" "this" {
   name   = local.bucket_name
-  region = var.region_bucket != "" ? var.region_bucket : var.region
+  region = var.region
   acl    = "public-read"
 
   cors_rule {
@@ -19,7 +19,7 @@ resource "digitalocean_spaces_bucket" "this" {
 }
 
 resource "digitalocean_spaces_bucket_object" "bermudas" {
-  region = local.region
+  region = var.region
   bucket = digitalocean_spaces_bucket.this.name
   key    = "bermudas.jpg"
   source = "${path.module}/images/bermudas.jpg"
@@ -27,7 +27,7 @@ resource "digitalocean_spaces_bucket_object" "bermudas" {
 }
 
 resource "digitalocean_spaces_bucket_object" "grindavik" {
-  region = local.region
+  region = var.region
   bucket = digitalocean_spaces_bucket.this.name
   key    = "grindavik.jpg"
   source = "${path.module}/images/grindavik.jpg"
@@ -35,7 +35,7 @@ resource "digitalocean_spaces_bucket_object" "grindavik" {
 }
 
 resource "digitalocean_spaces_bucket_object" "tokyo" {
-  region = local.region
+  region = var.region
   bucket = digitalocean_spaces_bucket.this.name
   key    = "tokyo.jpg"
   source = "${path.module}/images/tokyo.jpg"

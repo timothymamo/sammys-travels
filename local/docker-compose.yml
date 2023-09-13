@@ -16,7 +16,7 @@ services:
       api:
         aliases:
             - database
-  
+
   localstack:
     container_name: s3_bucket
     image: localstack/localstack:2.1.0
@@ -67,9 +67,8 @@ services:
       - .env
       - .env-backend
     environment: # Only needed for local development
-      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
-      - DB_SSL_MODE=disable # One of "require", "verify-full", "verify-ca", and "disable"
-      - FORCE_PATH_STYLE=true
+      - DB_SSL_MODE=disable # Disabled for local development
+      - FORCE_PATH_STYLE=true # Forces bucket path to the following http://localhost:4572/{bucket_name}
     depends_on:
       - db_migrate
     ports:

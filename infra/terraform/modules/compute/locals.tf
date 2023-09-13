@@ -16,14 +16,16 @@ locals {
 
   bucket_info = data.digitalocean_spaces_buckets.sammys_travels
 
+  region_bucket = [var.region_bucket] != [""] ? [var.region_bucket] : [var.region]
+
   env_file = templatefile("${path.module}/files/.env.tftpl",
     {
-      TF_POSTGRES_PORT       = "${local.db_info.port}",
-      TF_POSTGRES_HOST       = "${local.db_info.private_host}",
-      TF_POSTGRES_USERNAME   = "${local.db_info.user}",
-      TF_POSTGRES_PASSWORD   = "${local.db_info.password}",
-      TF_POSTGRES_DB         = "${local.db_info.database}",
-      TF_POSTGRES_SCHEMA     = "public",
+      TF_POSTGRES_PORT     = "${local.db_info.port}",
+      TF_POSTGRES_HOST     = "${local.db_info.private_host}",
+      TF_POSTGRES_USERNAME = "${local.db_info.user}",
+      TF_POSTGRES_PASSWORD = "${local.db_info.password}",
+      TF_POSTGRES_DB       = "${local.db_info.database}",
+      TF_POSTGRES_SCHEMA   = "public",
     }
   )
 
@@ -33,7 +35,6 @@ locals {
       TF_SPACES_KEY          = data.doppler_secrets.sammys_travels.map.SPACES_ACCESS_KEY_ID,
       TF_SPACES_SECRET       = data.doppler_secrets.sammys_travels.map.SPACES_SECRET_ACCESS_KEY,
       TF_SPACES_ENDPOINT_URL = "https://${local.bucket_info.buckets[0].region}.digitaloceanspaces.com",
-      TF_GOOGLE_API_KEY      = data.doppler_secrets.sammys_travels.map.GOOGLE_API_KEY,
     }
   )
 

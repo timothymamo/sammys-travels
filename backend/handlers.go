@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -11,9 +12,23 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/codingsince1985/geo-golang/google"
 	"github.com/go-chi/chi/v5"
 )
+
+type Response struct {
+	PlaceId     int     `json:"place_id"`
+	Licence     string  `json:"licence"`
+	PoweredBy   string  `json:"powered_by"`
+	OsmType     string  `json:"osm_type"`
+	OsmId       int     `json:"osm_id"`
+	Boundingbox []int   `json:"boundingbox"`
+	Lat         string  `json:"lat"`
+	Lon         string  `json:"lon"`
+	DisplayName string  `json:"display_name"`
+	Class       string  `json:"class"`
+	Type        string  `json:"type"`
+	Importance  float32 `json:"importance"`
+}
 
 func (app *App) Index(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
@@ -100,7 +115,7 @@ func (app *App) addToGo(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	lat, long := coordinates(p.Place)
+	lat, long := coordinates(w, p.Place)
 
 	err := p.addToGo(app.Database, lat, long)
 	if err != nil {
@@ -122,7 +137,7 @@ func (app *App) addVisited(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	lat, long := coordinates(p.Place)
+	lat, long := coordinates(w, p.Place)
 
 	err := p.addVisited(app.Database, lat, long, p.Photo)
 	if err != nil {
@@ -164,17 +179,34 @@ func uploadPhoto(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func coordinates(addr string) (float32, float32) {
+func coordinates(w http.ResponseWriter, addr string) (float32, float32) {
 
-	geocoder := google.Geocoder(os.Getenv("GOOGLE_API_KEY"))
+	url := "https://geocode.maps.co/search?q=" + addr
 
-	location, _ := geocoder.Geocode(addr)
-	if location != nil {
-		lat := location.Lat
-		long := location.Lng
+	resp, err := http.Get(url)
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, err.Error())
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, err.Error())
+	}
+
+	var response []Response
+	if err := json.Unmarshal(body, &response); err != nil { // Parse []byte to the go struct pointer
+		lat, err := strconv.ParseFloat(response[0].Lat, 32)
+		if err != nil {
+			respondWithError(w, http.StatusBadRequest, err.Error())
+		}
+		long, err := strconv.ParseFloat(response[0].Lon, 32)
+		if err != nil {
+			respondWithError(w, http.StatusBadRequest, err.Error())
+		}
 		return float32(lat), float32(long)
 	} else {
-		fmt.Println("got <nil> location")
+		respondWithError(w, http.StatusBadRequest, err.Error())
 		return 0.0, 0.0
 	}
 }

@@ -24,7 +24,7 @@ services:
       api:
 
   backend:
-    image: timothymamo/be-sammys-travels:0.3.2
+    image: timothymamo/be-sammys-travels:0.3.3
     container_name: backend
     hostname: backend
     env_file:

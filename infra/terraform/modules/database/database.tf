@@ -15,9 +15,4 @@ resource "digitalocean_database_firewall" "this" {
     type  = "tag"
     value = "sammys-travels"
   }
-
-  rule {
-    type  = "ip_addr"
-    value = "77.251.75.155"
-  }
 }

@@ -18,12 +18,6 @@ variable "spaces_secret_access_key" {
   sensitive   = true
 }
 
-variable "google_api" {
-  description = "Google Geolocation API key."
-  type        = string
-  sensitive   = true
-}
-
 variable "env_slug" {
   description = "The slug of the Doppler environment."
   type        = string

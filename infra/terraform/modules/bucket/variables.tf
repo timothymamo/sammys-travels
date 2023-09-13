@@ -23,24 +23,7 @@ variable "spaces_secret_access_key" {
 }
 
 variable "region" {
-  description = "The region where the Database will be created."
-  type        = string
-}
-
-variable "region_bucket" {
-  description = "The region where the Bucket will be created. Defaults to Database region if empty."
+  description = "The region where the Bucket will be created."
   type        = string
   default     = ""
-}
-
-variable "db_size" {
-  description = "The unique slug that identifies the type of Database."
-  type        = string
-  default     = "db-s-1vcpu-1gb"
-}
-
-variable "tags" {
-  description = "A list of the tags to be added to the default (`[\"supabase\", \"digitalocean\", \"terraform\"]`) Droplet tags."
-  type        = list(string)
-  default     = []
 }
