@@ -6,5 +6,5 @@ while true; do
   else
     echo "Site is DOWN"
   fi
-  sleep 3
+  sleep 5
 done
